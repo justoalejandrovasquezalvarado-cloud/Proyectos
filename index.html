@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sabor Directo — Pide tu comida favorita</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="container">
+    <div class="logo">SABOR<span>DIRECTO</span></div>
+    <nav class="site-nav" id="categoryNav" aria-label="Categorías">
+      <!-- Se llena dinámicamente con JS -->
+    </nav>
+    <button class="cart-btn" id="openCartBtn" aria-label="Abrir carrito">
+      🛒 Carrito <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-text">
+      <h1>Comida real,<br><em>a tu puerta</em> en minutos</h1>
+      <p>Elige entre hamburguesas, pizzas, tacos y más. Arma tu pedido, síguelo en tiempo real y disfrútalo sin salir de casa.</p>
+      <div class="hero-actions">
+        <a href="#catalogo" class="btn btn-primary">Ver el menú</a>
+        <button class="btn btn-ghost" id="heroTrackBtn">Rastrear un pedido</button>
+      </div>
+    </div>
+    <div class="hero-card">
+      <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500" alt="Hamburguesa doble con papas fritas">
+      <span class="tag">Más pedido hoy</span>
+      <h3>Hamburguesa Doble</h3>
+      <p>Doble carne, doble queso, tocino y salsa especial — Q62.00</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CATÁLOGO ============ -->
+<main>
+  <section class="catalog container" id="catalogo">
+    <div class="section-head">
+      <h2>Menú del día</h2>
+    </div>
+    <div class="filters" id="filters">
+      <button class="active" data-cat="todas">Todas</button>
+      <!-- categorías dinámicas -->
+    </div>
+    <div class="product-grid" id="productGrid">
+      <!-- productos dinámicos -->
+    </div>
+  </section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container">
+    Sabor Directo · Proyecto académico de sistema de pedidos de comida a domicilio
+  </div>
+</footer>
+
+<!-- ============ OVERLAY ============ -->
+<div class="overlay" id="overlay"></div>
+
+<!-- ============ CARRITO (DRAWER) ============ -->
+<aside class="cart-drawer" id="cartDrawer" aria-label="Carrito de compras">
+  <div class="cart-header">
+    <h2>Tu pedido</h2>
+    <button class="close-btn" id="closeCartBtn" aria-label="Cerrar carrito">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <!-- items dinámicos -->
+  </div>
+  <div class="cart-summary">
+    <div class="summary-row"><span>Subtotal</span><span id="sumSubtotal">Q0.00</span></div>
+    <div class="summary-row"><span>Envío</span><span id="sumEnvio">Q0.00</span></div>
+    <div class="summary-row"><span>Impuesto (12%)</span><span id="sumImpuesto">Q0.00</span></div>
+    <div class="summary-row total"><span>Total</span><span id="sumTotal">Q0.00</span></div>
+    <button class="checkout-btn" id="checkoutBtn" disabled>Continuar al pago</button>
+  </div>
+</aside>
+
+<!-- ============ MODAL CHECKOUT ============ -->
+<div class="modal" id="checkoutModal">
+  <div class="modal-box">
+    <h2>Datos de entrega</h2>
+    <p class="sub">Completa tus datos para confirmar el pedido.</p>
+
+    <div class="form-msg" id="formMsg"></div>
+
+    <form id="checkoutForm" novalidate>
+      <div class="field" id="field-nombre">
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Ej. Justo Pérez" required>
+        <span class="error-msg">Ingresa tu nombre completo.</span>
+      </div>
+      <div class="field" id="field-correo">
+        <label for="correo">Correo electrónico</label>
+        <input type="email" id="correo" name="correo" placeholder="tucorreo@ejemplo.com" required>
+        <span class="error-msg">Ingresa un correo válido.</span>
+      </div>
+      <div class="field" id="field-telefono">
+        <label for="telefono">Teléfono</label>
+        <input type="tel" id="telefono" name="telefono" placeholder="5555-5555" required>
+        <span class="error-msg">Ingresa un teléfono válido (8 dígitos).</span>
+      </div>
+      <div class="field" id="field-direccion">
+        <label for="direccion">Dirección de entrega</label>
+        <textarea id="direccion" name="direccion" rows="2" placeholder="Zona, calle, referencia..." required></textarea>
+        <span class="error-msg">Ingresa tu dirección de entrega.</span>
+      </div>
+      <div class="field">
+        <label>Método de pago</label>
+        <div class="pay-methods">
+          <label><input type="radio" name="pago" value="efectivo" checked><span>💵 Efectivo</span></label>
+          <label><input type="radio" name="pago" value="tarjeta"><span>💳 Tarjeta</span></label>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="cancelCheckoutBtn">Cancelar</button>
+        <button type="submit" class="btn btn-primary" id="submitOrderBtn">Confirmar pedido</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL CONFIRMACIÓN ============ -->
+<div class="modal" id="confirmModal">
+  <div class="modal-box confirm-box">
+    <div class="confirm-icon">✓</div>
+    <h2>¡Pedido confirmado!</h2>
+    <p class="sub">Gracias por tu compra, ya estamos preparando todo.</p>
+    <div class="order-number" id="orderNumber">#0000</div>
+    <div class="eta" id="orderEta">Entrega estimada: 30-40 min</div>
+    <div class="receipt" id="orderReceipt">
+      <!-- resumen dinámico -->
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="newOrderBtn" style="width:100%">Hacer otro pedido</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TOAST ============ -->
+<div class="toast" id="toast"></div>
+
+<script src="js/api.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
